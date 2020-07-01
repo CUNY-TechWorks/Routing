@@ -1,48 +1,59 @@
 import React, { Component } from 'react';
 
 export default class Pokemon extends Component {
-    constructor() {
-        super();
-        this.state = {
-            pokemon: [],
-            isLoading: true,
-        }
-    }
+   constructor() {
+      super();
 
-    async componentDidMount() {
+      this.state = {
+         pokemon: {},
+         isLoading: true,
+         isError: {error: false, msg: ""},
+      }
+   }
+
+   async componentDidMount() {
       try {
-        const response = await fetch('https://pokeapi.co/api/v2/pokemon');
+        const { pokemonId } = this.props.match.params;
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
+        
+        if(response.status === 404) {
+           this.setState({
+              isLoading: false,
+              isError: {error: true, msg: 'This pokemon does not exist'}
+           });
+           return;
+        }
         const data = await response.json();
+
         this.setState({
-           pokemon: data.results,
+           pokemon: data,
            isLoading: false,
         });
       }
       catch(err) {
-        console.log(err);
+        console.dir(err);
+        this.setState({
+           isLoading: false,
+           isError: {error: true, msg: err.message},
+        });
       }
-    }
+   }
+   
+   render() {
+     const {isLoading, pokemon, isError} = this.state;
 
-    render() {
-      const {pokemon, isLoading} = this.state
-      
-      if(isLoading) {
-         return <div> Loading... </div>;
-      }
-      else if(pokemon.length === 0) {
-         return <div> There are no Pokemon </div>;
-      }
-      else {
-        return (
-          <div>
-            <div> This is the pokemon list </div>
-            <div>
-              {pokemon.map(el => {
-                 return <div> {el.name} </div>
-              })}
-            </div>
-          </div>  
-        );
-      }
-    }
+     if(isError.error) {
+        return ( <div> {isError.msg} </div> )
+     }
+     if(isLoading) {
+        return ( <div> Loading... </div>)
+     }
+     else {
+       return (
+         <div> 
+            <div> {pokemon.name} </div>
+         </div>
+       );
+     }
+   }
 }

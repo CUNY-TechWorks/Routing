@@ -1,5 +1,5 @@
 import React from 'react';
-import {Home, About, NotFound, Pokemon} from'./components/';
+import {Home, About, NotFound, Pokemon, Pokemons} from'./components/';
 import {Route, Switch} from 'react-router-dom';
 
 export default function Routes() {
@@ -14,7 +14,9 @@ export default function Routes() {
 
          <Route exact path="/about" component={About} />
 
-         <Route exact path="/pokemon" component={Pokemon}/>
+         <Route exact path="/pokemon" component={Pokemons}/>
+    
+         <Route path="/pokemon/:pokemonId" component={Pokemon}/> 
 
          <Route path="*" component={NotFound} />
      </Switch>

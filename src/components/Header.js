@@ -16,6 +16,10 @@ export default function Header() {
         <Link to="/pokemon">
            <div> Pokemon List </div>
         </Link>
+
+        <Link to="/pokemon/:pokemonId">
+            <div> Pokemon page </div>
+        </Link>
         
         <Link to="*">
            <div> Incorrect Link </div>
